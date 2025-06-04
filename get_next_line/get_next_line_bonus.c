@@ -6,7 +6,7 @@
 /*   By: vde-maga <vde-maga@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:17:43 by vde-maga          #+#    #+#             */
-/*   Updated: 2025/05/12 16:29:18 by vde-maga         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:28:34 by vde-maga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,67 +91,3 @@ char	*get_next_line(int fd)
 	stash[fd] = ft_get_next(stash[fd]);
 	return (line);
 }
-
-#include <stdio.h>    // para printf() e perror()
-#include <stdlib.h>   // para free() e exit()
-#include <fcntl.h>    // para open()
-#include <unistd.h>   // para close()
-#include "get_next_line_bonus.h" // inclua o header da implementação bonus
-
-int main(int argc, char **argv)
-{
-    int fd1, fd2;
-    char *line_fd1;
-    char *line_fd2;
-
-    if (argc != 3)
-    {
-        printf("Uso: %s <arquivo1> <arquivo2>\n", argv[0]);
-        return (1);
-    }
-
-    fd1 = open(argv[1], O_RDONLY);
-    if (fd1 == -1)
-    {
-        perror("Erro ao abrir o arquivo 1");
-        return (1);
-    }
-    fd2 = open(argv[2], O_RDONLY);
-    if (fd2 == -1)
-    {
-        perror("Erro ao abrir o arquivo 2");
-        close(fd1);
-        return (1);
-    }
-
-    /*
-     * O laço a seguir chama get_next_line de cada descritor.
-     * Como a implementação bonus utiliza um array estático indexado por fd,
-     * é possível ler simultaneamente de vários arquivos.
-     * O laço intercalará a impressão das linhas de cada arquivo.
-     */
-    while (1)
-    {
-        line_fd1 = get_next_line(fd1);
-        line_fd2 = get_next_line(fd2);
-
-        if (!line_fd1 && !line_fd2)
-            break;
-
-        if (line_fd1)
-        {
-            printf("Arquivo 1: %s", line_fd1);
-            free(line_fd1);
-        }
-        if (line_fd2)
-        {
-            printf("Arquivo 2: %s", line_fd2);
-            free(line_fd2);
-        }
-    }
-
-    close(fd1);
-    close(fd2);
-    return (0);
-}
-
